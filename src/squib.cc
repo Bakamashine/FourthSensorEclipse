@@ -22,11 +22,15 @@ void run() {
 	}
 }
 
+void off() {
+	digitalWrite(SQUIB_LED_PIN, LOW);
+}
+
 // run squib with the burner
-void runB(bool st) {
+void runB() {
 	Squib::run();
-	digitalWrite(BURNER_LED_PIN, st);
+	Burner::manageBurner(Sens::all);
 }
-}
-;
+
+};
 // namespace Squib

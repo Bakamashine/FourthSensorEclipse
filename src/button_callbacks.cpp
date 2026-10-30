@@ -7,10 +7,18 @@
 #include "ui/menu_items.hpp"
 #include "validate.hpp"
 
+static void pre_click() {
+	if (Val::systemHalted) return;
+
+}
+
+// only after interruption
 static void btnSquibOnClick() {
-	if (Val::systemHalted) return;  // squib must stay off after an error
+	pre_click();
 	if (suc_prep) {
 		Squib::_squib_must_be_out = true;
+		Squib::off();
+		return;
 	}
 	Squib::run();
 
@@ -29,6 +37,7 @@ static void btnMenuOnClick() {
 }
 
 void btnTick() {
+	pre_click();
   Btn::menu.tick();
   Btn::plus.tick();
   Btn::minus.tick();
@@ -39,6 +48,7 @@ static void btnPlusLongPress() {
 }
 
 static void btnPlusOneClick() {
+	pre_click();
   if (currentPage != SETTINGS) return;
   if (isValueOpen)
     menuPageIncreaseValue();

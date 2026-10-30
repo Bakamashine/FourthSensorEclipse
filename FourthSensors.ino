@@ -76,51 +76,27 @@ void loop() {
   ledDebug();
 #endif
 	wdt_reset();
-#ifndef LED_DEBUG
-#ifdef INIT
 	Init::prepare();
-#endif
-#endif
-#ifdef ENABLE_VALIDATE
 	Val::check::error();
 	if (!Val::systemHalted) {
-#endif
 
-#ifdef INIT
 		if (suc_prep && Burner::isBurnerReady) {
-#endif
 			sensorSetup();  // only once, after the burner check passed
 			btnTick();
 			sensorsLoop();
-
-#ifdef DS18_SENSOR
 			readFromDS18();
-#endif
-
 #ifdef DEBUG
       debugPrint();
 #endif
-
-#ifdef ENABLE_COMMANDS
 			handleCommand();
-#endif
-#ifdef INIT
 		}
-#endif
-
-#ifdef ENABLE_VALIDATE
 	}
-#endif
 	ui_cls.draw();
 
-#ifdef ENABLE_BURNER
-//  if (!Val::systemHalted) Burner::standard_runBurn();
 	if (!Val::systemHalted)
-		Squib::runB();
-#endif
-#ifdef ENABLE_VALIDATE
+		Burner::manageBurner(Sens::all);
+
 	// validate
 	Val::pipeline(Sens::all);
-#endif
 
 }

@@ -54,6 +54,10 @@ float getTemp(Sensor &sensor) {
   return sensor.temp;
 }
 
+bool isSensorsReady(Sensors &sns) {
+	return sns._s_first->ready && sns._s_second->ready && sns._s_third->ready && sns._s_fourth->ready;
+}
+
 float getTempFromTable(Sensor &sensor) {
 #if TEMP_CALCULATION_VARIANT == VIA_RESISTANCE
   NTCLIST_VA_TYPE val = static_cast<NTCLIST_VA_TYPE>(sensor.resist);
@@ -175,12 +179,9 @@ void sensorsLoop() {
   constrSensor(Sens::third, THIRD_RESERVE_SENSOR_PIN);
   constrSensor(Sens::fourth, FOURTH_SENSOR_PIN);
 }
-bool getReadySensors(Sensors &sns) {
-  return sns._s_first->ready && sns._s_second->ready && sns._s_third->ready &&
-         sns._s_fourth->ready;
-}
+
 void sensorSetup() {
-  if (getReadySensors(Sens::all)) return;
+  if (isSensorsReady(Sens::all)) return;
   pinMode(FIRST_SENSOR_PIN, INPUT);
   pinMode(SECOND_RESERVE_SENSOR_PIN, INPUT);
   pinMode(THIRD_RESERVE_SENSOR_PIN, INPUT);

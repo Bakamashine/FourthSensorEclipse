@@ -26,12 +26,13 @@
 
 namespace Burner {
 
-void standard_runBurn();
+//void standard_runBurn();
 bool checkUTemp(Sensors &sn);
 inline bool isBurnerReady = false;
-
-void runBurn(Sensors&);
+bool checkUTempWithHyst(Sensors &);
+void manageBurner(Sensors&);
 void prepare();
+bool getStatus();
 
 }  // namespace Burner
 

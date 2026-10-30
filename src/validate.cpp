@@ -47,22 +47,25 @@ static int checkSensors(Sensors &sn) {
   return 0;  // no error
 }
 static int squib() {
-	if (Burner::checkUTemp(Sens::all)) {
-		if (!Squib::getSquibStatus()) {
-			return 303;
-		}
-	}
+	if (!Squib::getSquibStatus()) return 303;
 	return 0;
+//	if (Burner::checkUTemp(Sens::all)) {
+//		if (!Squib::getSquibStatus()) {
+//			return 303;
+//		}
+//	}
+//	return 0;
 }
 } // namespace check
 
 
 
 static int basePipeline(Sensors &sns) {
-  if (!getReadySensors(sns) || errorCode > 0) return 0;
+  if (!isSensorsReady(sns) || errorCode > 0) return 0;
   int squib_code = Val::check::squib();
   int sensor_code = Val::check::checkSensors(sns);
   int temp_code = Val::check::temp(sns);
+
 
   if (squib_code> 0) return squib_code;
   else if (sensor_code > 0) return sensor_code;

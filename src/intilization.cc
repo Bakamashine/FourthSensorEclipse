@@ -108,7 +108,7 @@ void prepare() {
 				// UI::closeStartPage();
 				ui_cls.closeStartPage();
 				suc_prep = true;
-				runBurn(Sens::all);
+				Burner::manageBurner(Sens::all);
 				break;
 			}
 

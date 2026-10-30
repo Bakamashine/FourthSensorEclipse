@@ -10,17 +10,24 @@
 
 #include <Arduino.h>
 #include "constants/pin.hpp"
+#include "burner.hpp"
 
 namespace Squib {
 bool getSquibStatus();
 void run();
 
 // running the squib with burner
-void runB(bool st = true);
+void runB();
 /*
  * Only for debug
  */
-inline bool _squib_must_be_out = false;
+volatile inline bool _squib_must_be_out = false;
+
+/*
+ * start squib
+ */
+void run();
+void off();
 };  // namespace Squib
 
 

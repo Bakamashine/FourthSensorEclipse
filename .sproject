@@ -1,7 +1,7 @@
 Config.Release.board.BOARD.ID=nano
 Config.Release.board.BOARD.MENU.cpu=atmega328
-Config.Release.board.BOARD.TXT=C:\Users\admin\eclipse\embedcpp-2026-09\eclipse\arduinoPlugin\arduinoPlugin\packages\arduino\hardware\avr\1.8.8\boards.txt
-Config.Release.board.PROGRAMMER.NAME=Arduino as ISP (ATmega32U4)
+Config.Release.board.BOARD.TXT=C:\Eclipse\eclipse\arduinoPlugin\packages\arduino\hardware\avr\1.8.8\boards.txt
+Config.Release.board.PROGRAMMER.NAME=AVR ISP
 Config.Release.board.UPLOAD.PORT=COM4
 Config.Release.compile.sloeber.extra.all=
 Config.Release.compile.sloeber.extra.archive=

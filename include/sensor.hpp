@@ -75,7 +75,7 @@ void sensorFilterInit(Sensor &sensor, uint8_t pin);
 void sensorsLoop();
 void sensorSetup();
 void DS18Setup();
-bool getReadySensors(Sensors &sn);
+bool isSensorsReady(Sensors &sn);
 
 int16_t ntcTempAt(size_t i);
 NTCLIST_VA_TYPE ntcValAt(size_t i);

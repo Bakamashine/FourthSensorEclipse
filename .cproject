@@ -30,6 +30,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FourthSensors/libraries/GyverIO/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/FourthSensors/libraries/OneButton/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;C:\Users\admin\eclipse-workspace\FourthSensors\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/include}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.cpp.sketch.input.575036176" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
 							</tool>
