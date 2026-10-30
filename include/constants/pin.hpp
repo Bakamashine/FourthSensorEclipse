@@ -1,0 +1,21 @@
+#pragma once
+
+#define FIRST_SENSOR_PIN A0
+#define SECOND_RESERVE_SENSOR_PIN A1
+#define THIRD_RESERVE_SENSOR_PIN A2
+#define FOURTH_SENSOR_PIN A3
+#define DS18_PIN 5
+
+#define MENU_BTN_PIN 12
+#define PLUS_BTN_PIN 11
+#define MINUS_BTN_PIN 10
+
+#define SQUIB_BTN_PIN 2
+#define VENT_LED_PIN 7
+#define IGN_PIN 8
+#define PILOT_PIN 9
+#define CHECK_SQUIB_LED_PIN 3
+#define SQUIB_LED_PIN 13
+
+#define BURNER_LED_PIN 6
+#define ERROR_LED_PIN 4
