@@ -47,8 +47,10 @@ static int checkSensors(Sensors &sn) {
   return 0;  // no error
 }
 static int squib() {
-	if (Burner::checkUTemp(Sens::all) && !Squib::getSquibStatus()) {
-		return 303;
+	if (Burner::checkUTemp(Sens::all)) {
+		if (!Squib::getSquibStatus()) {
+			return 303;
+		}
 	}
 	return 0;
 }

@@ -7,30 +7,29 @@
  *      Author: alexandru.bogdan
  */
 
-
 #include "../include/MedianFilter.h"
 
 int MEDIANFILTER_Init(MedianFilter_t *medianFilter) {
-  if (medianFilter && medianFilter->medianBuffer &&
-      (medianFilter->numNodes % 2) && (medianFilter->numNodes > 1)) {
-    // initialize buffer nodes
-    for (unsigned int i = 0; i < medianFilter->numNodes; i++) {
-      medianFilter->medianBuffer[i].value = 0;
-      medianFilter->medianBuffer[i].nextValue =
-          &medianFilter->medianBuffer[(i + 1) % medianFilter->numNodes];
-      medianFilter->medianBuffer[(i + 1) % medianFilter->numNodes].prevValue =
-          &medianFilter->medianBuffer[i];
-    }
-    // initialize heads
-    medianFilter->ageHead = medianFilter->medianBuffer;
-    medianFilter->valueHead = medianFilter->medianBuffer;
-    medianFilter->medianHead =
-        &medianFilter->medianBuffer[medianFilter->numNodes / 2];
+	if (medianFilter && medianFilter->medianBuffer
+			&& (medianFilter->numNodes % 2) && (medianFilter->numNodes > 1)) {
+		// initialize buffer nodes
+		for (unsigned int i = 0; i < medianFilter->numNodes; i++) {
+			medianFilter->medianBuffer[i].value = 0;
+			medianFilter->medianBuffer[i].nextValue =
+					&medianFilter->medianBuffer[(i + 1) % medianFilter->numNodes];
+			medianFilter->medianBuffer[(i + 1) % medianFilter->numNodes].prevValue =
+					&medianFilter->medianBuffer[i];
+		}
+		// initialize heads
+		medianFilter->ageHead = medianFilter->medianBuffer;
+		medianFilter->valueHead = medianFilter->medianBuffer;
+		medianFilter->medianHead =
+				&medianFilter->medianBuffer[medianFilter->numNodes / 2];
 
-    return 0;
-  }
+		return 0;
+	}
 
-  return -1;
+	return -1;
 }
 
 /*
@@ -66,75 +65,73 @@ int MEDIANFILTER_Init(MedianFilter_t *medianFilter) {
  * No NULL check here — this is a hot DSP path and Init already validates.
  */
 int MEDIANFILTER_Insert(MedianFilter_t *restrict medianFilter, int sample) {
-  MedianFilterNode_t *newNode, *it;
+	MedianFilterNode_t *newNode, *it;
 
-  // cache struct fields in locals to avoid repeated pointer indirection
-  MedianFilterNode_t *ageHead = medianFilter->ageHead;
-  MedianFilterNode_t *valueHead = medianFilter->valueHead;
-  MedianFilterNode_t *medianHead = medianFilter->medianHead;
-  const unsigned int half = medianFilter->numNodes >> 1;
+	// cache struct fields in locals to avoid repeated pointer indirection
+	MedianFilterNode_t *ageHead = medianFilter->ageHead;
+	MedianFilterNode_t *valueHead = medianFilter->valueHead;
+	MedianFilterNode_t *medianHead = medianFilter->medianHead;
+	const unsigned int half = medianFilter->numNodes >> 1;
 
-  if (ageHead ==
-      valueHead) {  // oldest node is also the smallest — advance value head
-    valueHead = valueHead->nextValue;
-  }
+	if (ageHead == valueHead) { // oldest node is also the smallest — advance value head
+		valueHead = valueHead->nextValue;
+	}
 
-  // pre-correct median for the node about to be evicted
-  if (ageHead == medianHead || NODE_GT(ageHead, medianHead)) {
-    medianHead = medianHead->prevValue;
-  }
+	// pre-correct median for the node about to be evicted
+	if (ageHead == medianHead || NODE_GT(ageHead, medianHead)) {
+		medianHead = medianHead->prevValue;
+	}
 
-  // recycle oldest node with new sample
-  newNode = ageHead;
-  newNode->value = sample;
+	// recycle oldest node with new sample
+	newNode = ageHead;
+	newNode->value = sample;
 
-  // unlink from value chain
-  MedianFilterNode_t *oldNext = newNode->nextValue;
-  MedianFilterNode_t *oldPrev = newNode->prevValue;
-  oldNext->prevValue = oldPrev;
-  oldPrev->nextValue = oldNext;
+	// unlink from value chain
+	MedianFilterNode_t *oldNext = newNode->nextValue;
+	MedianFilterNode_t *oldPrev = newNode->prevValue;
+	oldNext->prevValue = oldPrev;
+	oldPrev->nextValue = oldNext;
 
-  // advance age head (age chain is always buffer[0]→[1]→...→[N-1]→[0])
-  MedianFilterNode_t *nextAge = newNode + 1;
-  if (nextAge == medianFilter->medianBuffer + medianFilter->numNodes)
-    nextAge = medianFilter->medianBuffer;
-  medianFilter->ageHead = nextAge;
+	// advance age head (age chain is always buffer[0]→[1]→...→[N-1]→[0])
+	MedianFilterNode_t *nextAge = newNode + 1;
+	if (nextAge == medianFilter->medianBuffer + medianFilter->numNodes)
+		nextAge = medianFilter->medianBuffer;
+	medianFilter->ageHead = nextAge;
 
-  // find insertion point — bidirectional search from median
-  if (SAMPLE_LT(sample, newNode,
-                medianHead)) {  // search downward — valueHead acts as sentinel
-    it = medianHead->prevValue;
-    while (it != valueHead && SAMPLE_LT(sample, newNode, it))
-      it = it->prevValue;
+	// find insertion point — bidirectional search from median
+	if (SAMPLE_LT(sample, newNode, medianHead)) { // search downward — valueHead acts as sentinel
+		it = medianHead->prevValue;
+		while (it != valueHead && SAMPLE_LT(sample, newNode, it))
+			it = it->prevValue;
 
-    if (it != valueHead || SAMPLE_GE(sample, newNode, it))
-      it = it->nextValue;
-    else
-      valueHead = newNode;
-  } else {  // search upward — countdown bounds check (compare-to-zero is cheap)
-    it = medianHead->nextValue;
-    unsigned int remaining = half;
-    while (remaining && SAMPLE_GE(sample, newNode, it)) {
-      it = it->nextValue;
-      remaining--;
-    }
-  }
+		if (it != valueHead || SAMPLE_GE(sample, newNode, it))
+			it = it->nextValue;
+		else
+			valueHead = newNode;
+	} else { // search upward — countdown bounds check (compare-to-zero is cheap)
+		it = medianHead->nextValue;
+		unsigned int remaining = half;
+		while (remaining && SAMPLE_GE(sample, newNode, it)) {
+			it = it->nextValue;
+			remaining--;
+		}
+	}
 
-  // link new node into value chain
-  MedianFilterNode_t *insertPrev = it->prevValue;
-  insertPrev->nextValue = newNode;
-  newNode->prevValue = insertPrev;
-  it->prevValue = newNode;
-  newNode->nextValue = it;
+	// link new node into value chain
+	MedianFilterNode_t *insertPrev = it->prevValue;
+	insertPrev->nextValue = newNode;
+	newNode->prevValue = insertPrev;
+	it->prevValue = newNode;
+	newNode->nextValue = it;
 
-  // post-correct median
-  if (SAMPLE_GE(sample, newNode, medianHead))
-    medianHead = medianHead->nextValue;
+	// post-correct median
+	if (SAMPLE_GE(sample, newNode, medianHead))
+		medianHead = medianHead->nextValue;
 
-  medianFilter->valueHead = valueHead;
-  medianFilter->medianHead = medianHead;
+	medianFilter->valueHead = valueHead;
+	medianFilter->medianHead = medianHead;
 
-  return medianHead->value;
+	return medianHead->value;
 }
 
 #undef NODE_GT

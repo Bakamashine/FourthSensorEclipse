@@ -32,7 +32,7 @@
 #define UICLASS GyverOLED<G_OLED_CLASS, OLED_NO_BUFFER>
 #endif
 
-#define BURNER_PREPARE
+#define INIT
 
 #define SQUIB_BTN
 #define LED_BUILD_STATUS

@@ -4,17 +4,19 @@
 
 #define MAX_SETTINGS_ITEMS 4
 
-enum VALUE_TYPE { INT, FLOAT };
+enum VALUE_TYPE {
+	INT, FLOAT
+};
 
 struct MenuItem {
-  int row;
-  const char *preview;
-  void *target;
-  VALUE_TYPE kind;
-  float step;
-  void (*save_func)(int);
-  float min;
-  float max;
+	int row;
+	const char *preview;
+	void *target;
+	VALUE_TYPE kind;
+	float step;
+	void (*save_func)(int);
+	float min;
+	float max;
 };
 
 void buildItems(Sensors &sns);

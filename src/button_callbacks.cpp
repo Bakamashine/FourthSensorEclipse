@@ -12,7 +12,8 @@ static void btnSquibOnClick() {
 	if (suc_prep) {
 		Squib::_squib_must_be_out = true;
 	}
-	Squib::run(!digitalRead(SQUIB_LED_PIN));
+	Squib::run();
+
 }
 
 static void btnMenuOnClick() {

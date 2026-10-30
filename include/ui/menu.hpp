@@ -4,7 +4,7 @@
 
 class UI_cls;
 
-void menuPage(UI_cls &, Sensors &);
+void menuPage(UI_cls&, Sensors&);
 void menuPageIncreaseValue();
 void menuPageDecreaseValue();
 void menuSelectNext();

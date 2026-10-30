@@ -26,75 +26,75 @@ void handleCommand();
 #include "led.hpp"
 
 void debugPrint() {
-  Serial.println("=====DEBUG INPUT====");
-  // acp
-  PRINT_DEBUG("[ACP] s_first: ", Sens::first.acp);
-  PRINT_DEBUG("[ACP] s_second: ", Sens::second.acp);
-  PRINT_DEBUG("[ACP] s_third: ", Sens::third.acp);
-  PRINT_DEBUG("[ACP] s_fourth: ", Sens::fourth.acp);
+	Serial.println("=====DEBUG INPUT====");
+	// acp
+	PRINT_DEBUG("[ACP] s_first: ", Sens::first.acp);
+	PRINT_DEBUG("[ACP] s_second: ", Sens::second.acp);
+	PRINT_DEBUG("[ACP] s_third: ", Sens::third.acp);
+	PRINT_DEBUG("[ACP] s_fourth: ", Sens::fourth.acp);
 
-  // temperature
-  PRINT_DEBUG("[TEMP] s_first: ", Sens::first.temp);
-  PRINT_DEBUG("[TEMP] s_second: ", Sens::second.temp);
-  PRINT_DEBUG("[TEMP] s_third: ", Sens::third.temp);
-  PRINT_DEBUG("[TEMP] s_fourth: ", Sens::fourth.temp);
+	// temperature
+	PRINT_DEBUG("[TEMP] s_first: ", Sens::first.temp);
+	PRINT_DEBUG("[TEMP] s_second: ", Sens::second.temp);
+	PRINT_DEBUG("[TEMP] s_third: ", Sens::third.temp);
+	PRINT_DEBUG("[TEMP] s_fourth: ", Sens::fourth.temp);
 #ifdef DS18_SENSOR
-  PRINT_DEBUG("[TEMP] DS18: ", Sens::ds18Temp);
+	PRINT_DEBUG("[TEMP] DS18: ", Sens::ds18Temp);
 #endif
 
-  // other variables
-  PRINT_DEBUG("[SETTINGS_H] Hysteresis: ", hyst);
-  PRINT_DEBUG("[MENU_UI_H] isValueOpen: ", isValueOpen);
-  PRINT_DEBUG("[MENU_UI_H] _baseMenuSelected: ", _baseMenuSelected);
-  PRINT_DEBUG("[MENU_UI_H] _itemsCount: ", _itemsCount);
-  PRINT_DEBUG("[PAGE_H] currentPage: ", currentPage);
+	// other variables
+	PRINT_DEBUG("[SETTINGS_H] Hysteresis: ", hyst);
+	PRINT_DEBUG("[MENU_UI_H] isValueOpen: ", isValueOpen);
+	PRINT_DEBUG("[MENU_UI_H] _baseMenuSelected: ", _baseMenuSelected);
+	PRINT_DEBUG("[MENU_UI_H] _itemsCount: ", _itemsCount);
+	PRINT_DEBUG("[PAGE_H] currentPage: ", currentPage);
 #ifdef ENABLE_VALIDATE
-  PRINT_DEBUG("[ERROR_H] errorCode: ", Val::errorCode);
-  PRINT_DEBUG("[SETTINGS_H] minPermOffset: ", minPermOffset);
-  PRINT_DEBUG("[SETTINGS_H] maxPermOffset: ", maxPermOffset);
+	PRINT_DEBUG("[ERROR_H] errorCode: ", Val::errorCode);
+	PRINT_DEBUG("[SETTINGS_H] minPermOffset: ", minPermOffset);
+	PRINT_DEBUG("[SETTINGS_H] maxPermOffset: ", maxPermOffset);
 #endif
 }
 
 void setup() {
-  wdt_disable();
-  Serial.begin(9600);
-  Wire.setWireTimeout(3000, true);
+	wdt_disable();
+	Serial.begin(9600);
+	Wire.setWireTimeout(3000, true);
 
-  ui_cls.init();
+	ui_cls.init();
 
-  btnSetup();
+	btnSetup();
 #ifdef LED_BUILD_STATUS
-  ledSetup();
+	ledSetup();
 #endif
-  _EEPROM::readFromEEPROM();
+	_EEPROM::readFromEEPROM();
 
-  wdt_enable(WDTO_4S);
+	wdt_enable(WDTO_4S);
 }
 
 void loop() {
 #ifdef LED_DEBUG
   ledDebug();
 #endif
-  wdt_reset();
+	wdt_reset();
 #ifndef LED_DEBUG
-#ifdef BURNER_PREPARE
-  Burner::prepare();
+#ifdef INIT
+	Init::prepare();
 #endif
 #endif
 #ifdef ENABLE_VALIDATE
-  Val::check::error();
-  if (!Val::systemHalted) {
+	Val::check::error();
+	if (!Val::systemHalted) {
 #endif
 
-#ifdef BURNER_PREPARE
-    if (suc_prep && Burner::isBurnerReady) {
+#ifdef INIT
+		if (suc_prep && Burner::isBurnerReady) {
 #endif
-      sensorSetup();  // only once, after the burner check passed
-      btnTick();
-      sensorsLoop();
+			sensorSetup();  // only once, after the burner check passed
+			btnTick();
+			sensorsLoop();
 
 #ifdef DS18_SENSOR
-      readFromDS18();
+			readFromDS18();
 #endif
 
 #ifdef DEBUG
@@ -102,24 +102,25 @@ void loop() {
 #endif
 
 #ifdef ENABLE_COMMANDS
-      handleCommand();
+			handleCommand();
 #endif
-#ifdef BURNER_PREPARE
-    }
+#ifdef INIT
+		}
 #endif
 
 #ifdef ENABLE_VALIDATE
-  }
+	}
 #endif
-  ui_cls.draw();
+	ui_cls.draw();
 
 #ifdef ENABLE_BURNER
-  if (!Val::systemHalted) Burner::standard_runBurn();
+//  if (!Val::systemHalted) Burner::standard_runBurn();
+	if (!Val::systemHalted)
+		Squib::runB();
 #endif
 #ifdef ENABLE_VALIDATE
-  // validate
-  Val::pipeline(Sens::all);
+	// validate
+	Val::pipeline(Sens::all);
 #endif
-
 
 }

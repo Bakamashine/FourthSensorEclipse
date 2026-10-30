@@ -6,6 +6,8 @@
 #include "settings.hpp"
 #include "ui/ui_class.hpp"
 #include "validate.hpp"
+#include "initialization.hpp"
+#include "squib.hpp"
 
 #define YES_OR_NO(value) value ? "yes" : "no"
 
@@ -22,41 +24,14 @@
  *
  */
 
-namespace Squib {
-bool getSquibStatus();
-void run(bool st = true);
-
-
-// running the squib with burner
-void runB(bool st = true);
-/*
- * Only for debug
- */
-inline bool _squib_must_be_out = false;
-};  // namespace Squib
-
-
-
 namespace Burner {
 
 void standard_runBurn();
 bool checkUTemp(Sensors &sn);
 inline bool isBurnerReady = false;
 
+void runBurn(Sensors&);
 void prepare();
 
 }  // namespace Burner
 
-inline bool _vent_status = false;
-inline bool _ign_trans = false;
-inline bool _pil_val = false;
-inline bool _bur_sens = false;
-
-// successful prepare
-inline bool suc_prep = false;
-
-// for gui
-inline bool loop_vent_status = false;
-inline bool loop_ign_trans = false;
-inline bool loop_pil_val = false;
-inline bool loop_bur_sens = false;
