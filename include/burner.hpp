@@ -2,12 +2,12 @@
 #include <avr/wdt.h>
 
 #include "constants/pin.hpp"
+#include "initialization.hpp"
 #include "sensor.hpp"
 #include "settings.hpp"
+#include "squib.hpp"
 #include "ui/ui_class.hpp"
 #include "validate.hpp"
-#include "initialization.hpp"
-#include "squib.hpp"
 
 #define YES_OR_NO(value) value ? "yes" : "no"
 
@@ -26,13 +26,12 @@
 
 namespace Burner {
 
-//void standard_runBurn();
+// void standard_runBurn();
 bool checkUTemp(Sensors &sn);
 inline bool isBurnerReady = false;
 bool checkUTempWithHyst(Sensors &);
-void manageBurner(Sensors&);
+void manageBurner(Sensors &);
 void prepare();
 bool getStatus();
 
 }  // namespace Burner
-

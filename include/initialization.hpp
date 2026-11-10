@@ -9,13 +9,12 @@
 #define INITIALIZATION_HPP_
 #include <avr/wdt.h>
 
+#include "burner.hpp"
 #include "constants/pin.hpp"
 #include "sensor.hpp"
 #include "settings.hpp"
 #include "ui/ui_class.hpp"
 #include "validate.hpp"
-#include "burner.hpp"
-
 
 #define ATTEMPTS 5
 static constexpr int vent_delay = 1000 * 5;         // 5 sec
@@ -46,7 +45,6 @@ namespace Init {
 
 void prepare();
 
-} // namespace Init
-
+}  // namespace Init
 
 #endif /* INITIALIZATION_HPP_ */

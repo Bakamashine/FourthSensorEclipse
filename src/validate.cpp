@@ -10,7 +10,6 @@
 
 namespace Val {
 
-
 namespace check {
 static int temp(Sensors &sns) {
 #ifdef ENABLE_VALIDATE
@@ -43,22 +42,20 @@ static int checkSensors(Sensors &sn) {
 
   */
 
-	// not implemented
+  // not implemented
   return 0;  // no error
 }
 static int squib() {
-	if (!Squib::getSquibStatus()) return 303;
-	return 0;
-//	if (Burner::checkUTemp(Sens::all)) {
-//		if (!Squib::getSquibStatus()) {
-//			return 303;
-//		}
-//	}
-//	return 0;
+  if (!Squib::getSquibStatus()) return 303;
+  return 0;
+  //	if (Burner::checkUTemp(Sens::all)) {
+  //		if (!Squib::getSquibStatus()) {
+  //			return 303;
+  //		}
+  //	}
+  //	return 0;
 }
-} // namespace check
-
-
+}  // namespace check
 
 static int basePipeline(Sensors &sns) {
   if (!isSensorsReady(sns) || errorCode > 0) return 0;
@@ -66,12 +63,14 @@ static int basePipeline(Sensors &sns) {
   int sensor_code = Val::check::checkSensors(sns);
   int temp_code = Val::check::temp(sns);
 
+  if (squib_code > 0)
+    return squib_code;
+  else if (sensor_code > 0)
+    return sensor_code;
+  else if (temp_code > 0)
+    return temp_code;
 
-  if (squib_code> 0) return squib_code;
-  else if (sensor_code > 0) return sensor_code;
-  else if (temp_code > 0) return temp_code;
-
-  return 0; // no error
+  return 0;  // no error
 }
 
 void pipeline(Sensors &sns) {
@@ -89,11 +88,11 @@ void haltSystem() {
   // button ISR) must not leave an output energized after a halt
   digitalWrite(BURNER_LED_PIN, LOW);
 #ifdef BURNER_PREPARE
-  digitalWrite(VENT_LED_PIN, LOW); // ventilation led
-  digitalWrite(IGN_PIN, LOW); // ignition transformer led
-  digitalWrite(PILOT_PIN, LOW); // pilot valve
-  digitalWrite(CHECK_SQUIB_LED_PIN, LOW); // burner led
-  digitalWrite(SQUIB_LED_PIN, LOW);  // squib led
+  digitalWrite(VENT_LED_PIN, LOW);         // ventilation led
+  digitalWrite(IGN_PIN, LOW);              // ignition transformer led
+  digitalWrite(PILOT_PIN, LOW);            // pilot valve
+  digitalWrite(CHECK_SQUIB_LED_PIN, LOW);  // burner led
+  digitalWrite(SQUIB_LED_PIN, LOW);        // squib led
 #endif
   digitalWrite(ERROR_LED_PIN, HIGH);
   if (!systemHalted) {
@@ -103,6 +102,5 @@ void haltSystem() {
   systemHalted = 1;
   currentPage = ERROR;
 }
-
 
 }  // namespace Val

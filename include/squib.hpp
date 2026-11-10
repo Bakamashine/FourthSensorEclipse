@@ -9,8 +9,9 @@
 #define SQUIB_HPP_
 
 #include <Arduino.h>
-#include "constants/pin.hpp"
+
 #include "burner.hpp"
+#include "constants/pin.hpp"
 
 namespace Squib {
 bool getSquibStatus();
@@ -29,7 +30,5 @@ volatile inline bool _squib_must_be_out = false;
 void run();
 void off();
 };  // namespace Squib
-
-
 
 #endif /* SQUIB_HPP_ */

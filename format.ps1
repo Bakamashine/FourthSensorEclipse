@@ -1,0 +1,1 @@
+Get-ChildItem -Recurse -Include *.cpp,*.h, *.c, *.hpp | ForEach-Object { clang-format -i -style=file $_.FullName }

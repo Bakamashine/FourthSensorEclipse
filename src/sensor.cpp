@@ -55,7 +55,8 @@ float getTemp(Sensor &sensor) {
 }
 
 bool isSensorsReady(Sensors &sns) {
-	return sns._s_first->ready && sns._s_second->ready && sns._s_third->ready && sns._s_fourth->ready;
+  return sns._s_first->ready && sns._s_second->ready && sns._s_third->ready &&
+         sns._s_fourth->ready;
 }
 
 float getTempFromTable(Sensor &sensor) {

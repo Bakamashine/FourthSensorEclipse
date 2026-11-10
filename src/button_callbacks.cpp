@@ -8,20 +8,18 @@
 #include "validate.hpp"
 
 static void pre_click() {
-	if (Val::systemHalted) return;
-
+  if (Val::systemHalted) return;
 }
 
 // only after interruption
 static void btnSquibOnClick() {
-	pre_click();
-	if (suc_prep) {
-		Squib::_squib_must_be_out = true;
-		Squib::off();
-		return;
-	}
-	Squib::run();
-
+  pre_click();
+  if (suc_prep) {
+    Squib::_squib_must_be_out = true;
+    Squib::off();
+    return;
+  }
+  Squib::run();
 }
 
 static void btnMenuOnClick() {
@@ -37,7 +35,7 @@ static void btnMenuOnClick() {
 }
 
 void btnTick() {
-	pre_click();
+  pre_click();
   Btn::menu.tick();
   Btn::plus.tick();
   Btn::minus.tick();
@@ -48,7 +46,7 @@ static void btnPlusLongPress() {
 }
 
 static void btnPlusOneClick() {
-	pre_click();
+  pre_click();
   if (currentPage != SETTINGS) return;
   if (isValueOpen)
     menuPageIncreaseValue();

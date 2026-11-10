@@ -8,7 +8,7 @@ void pipeline(Sensors &);
 int pipelineWithoutHalt(Sensors &);
 void haltSystem();
 namespace check {
-	void error();
+void error();
 }
 inline bool systemHalted = false;
 }  // namespace Val
